@@ -10,12 +10,14 @@ if (POLICY CMP0141)
 endif()
 
 project ("Thread Pool Library")
+find_package(Threads REQUIRED)
 
 # Add source to this project's executable.
-add_executable (CMakeTarget "src/thread-pool.cpp"  "include/thread-pool.h" "include/task.h")
+add_executable (CMakeTarget "main.cpp"  "include/thread-pool/thread-pool.h" "include/thread-pool/task.h" "include/thread-pool/task-queue.h" "src/task-queue.cpp"  "src/thread-pool.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET CMakeTarget PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.
+target_link_libraries(CMakeTarget PRIVATE Threads::Threads)
