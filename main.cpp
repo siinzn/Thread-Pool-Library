@@ -6,11 +6,22 @@ using namespace std;
 int main()
 {
 	std::cout << "Starting thread pool\n";
-	ThreadPool pool(10);
+    // declaring the class in the scope forces destructor to run, so then the last print runs after all tasks are done.
+    {
+        ThreadPool pool(3);
+        pool.submit([]() {
+            std::cout << "Task 1 is running normally.\n";
+            });
 
-	for (int i = 0; i < 8; ++i) {
-		pool.submit([i]() { std::cout << "Executing task " << i << "\n"; });
-	}
+        pool.submit([]() {
+            std::cout << "Task 2 is throwing an exception...\n";
+            throw std::runtime_error("Something went wrong inside the task!");
+            });
+
+        pool.submit([]() {
+            std::cout << "Task 3 is running normally.\n";
+            });
+    }
 
 	std::cout << "Ending thread pool\n";
 	return 0;

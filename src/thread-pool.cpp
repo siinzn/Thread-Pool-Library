@@ -10,7 +10,7 @@ ThreadPool::ThreadPool(size_t nthreads) : numThreads(nthreads)
 }
 
 void ThreadPool::payload() { 
-	std::cout << "Thread Id: " << std::this_thread::get_id() << "\n";
+	//std::cout << "Thread Id: " << std::this_thread::get_id() << "\n";
 	while (true) {
 		//lock so all the threads are in line to get the task from queue
 		std::unique_lock<std::mutex> lock(queueMutex);
@@ -28,8 +28,17 @@ void ThreadPool::payload() {
 		if (!queue.empty()) {
 			auto task = queue.front();
 			queue.pop();
-			//lock.unlock();
-			task();
+			lock.unlock();
+
+			// try/catch block catches any exception
+			try { task(); }
+			catch (const std::exception& e)
+			{
+				std::cerr << "Caught exception from worker thread: " << e.what() << "\n";
+			}
+			catch (...) {
+				std::cerr << "Caught unkown exception from worker thread: \n";
+			}
 		}
 	}
 }
