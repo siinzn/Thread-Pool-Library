@@ -1,27 +1,20 @@
 ﻿
 #include "./include/thread-pool/thread-pool.h"
 
-using namespace std;
+void print(int a, std::string yes) {
+	std::cout << yes << a <<"\n";
+}
 
 int main()
 {
 	std::cout << "Starting thread pool\n";
-    // declaring the class in the scope forces destructor to run, so then the last print runs after all tasks are done.
-    {
-        ThreadPool pool(3);
-        pool.submit([]() {
-            std::cout << "Task 1 is running normally.\n";
-            });
-
-        pool.submit([]() {
-            std::cout << "Task 2 is throwing an exception...\n";
-            throw std::runtime_error("Something went wrong inside the task!");
-            });
-
-        pool.submit([]() {
-            std::cout << "Task 3 is running normally.\n";
-            });
-    }
+	// declaring the class in the scope forces destructor to run, so then the last print runs after all tasks are done.
+	{
+		ThreadPool pool(3);
+		pool.submit(print, 70, "hello");
+		pool.submit([](int a, int b) { std::cout << a * b << "\n"; }, 4, 6);
+		//pool.submit()
+	}
 
 	std::cout << "Ending thread pool\n";
 	return 0;

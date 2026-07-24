@@ -11,7 +11,18 @@ class ThreadPool {
 public:
 	ThreadPool(size_t nthreads);
 	void payload();
-	void submit(std::function<void()>);
+
+	template<typename F, typename... Args>
+	void submit(F f, Args... args) {
+		// lock_guard doesnt really allow to unlock manually, its a strict lock basically
+		std::lock_guard<std::mutex> lock(queueMutex);
+		std::function<void()> func = [f, args...]() {
+			f(args...);
+			};
+		queue.push(func);
+		cv.notify_one();
+	};
+
 	~ThreadPool();
 private:
 	size_t numThreads;
