@@ -5,6 +5,7 @@
 #include <functional>
 #include <mutex>
 #include <condition_variable>
+#include <utility>
 
 
 class ThreadPool {
@@ -13,10 +14,10 @@ public:
 	void payload();
 
 	template<typename F, typename... Args>
-	void submit(F f, Args... args) {
+	void submit(F&& f, Args&&... args) {
 		// lock_guard doesnt really allow to unlock manually, its a strict lock basically
 		std::lock_guard<std::mutex> lock(queueMutex);
-		std::function<void()> func = [f, args...]() {
+		std::function<void()> func = [f = std::forward<F>(f), ...args = std::forward<Args>(args)]() mutable{
 			f(args...);
 			};
 		queue.push(func);

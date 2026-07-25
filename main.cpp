@@ -11,9 +11,17 @@ int main()
 	// declaring the class in the scope forces destructor to run, so then the last print runs after all tasks are done.
 	{
 		ThreadPool pool(3);
+
+		// test to see if different types of params work
 		pool.submit(print, 70, "hello");
+		// test for lambda
 		pool.submit([](int a, int b) { std::cout << a * b << "\n"; }, 4, 6);
-		//pool.submit()
+		// test to see if mutable works
+		int counter = 0;
+		pool.submit([counter]() mutable {
+			counter++;
+			std::cout << "Counter: " << counter << "\n";
+			});
 	}
 
 	std::cout << "Ending thread pool\n";
