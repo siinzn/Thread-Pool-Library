@@ -42,18 +42,6 @@ void ThreadPool::payload() {
 		}
 	}
 }
-/*
-apparently template functions have to be implemented in header files and not in cpp files. crazy 
-template void ThreadPool::submit(F f, Args... args) {
-	// lock_guard doesnt really allow to unlock manually, its a strict lock basically
-	std::lock_guard<std::mutex> lock(queueMutex);
-	std::function<void()> func = [a, b]() {
-		std::cout << a + b << "\n";
-		};
-	queue.push(func);
-	cv.notify_one();
-}
-*/
 
 ThreadPool::~ThreadPool() {
 	{

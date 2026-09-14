@@ -22,6 +22,21 @@ int main()
 			counter++;
 			std::cout << "Counter: " << counter << "\n";
 			});
+		// future get test
+		std::future<int> add = pool.submit([](int a, int b) {return a + b;}, 5,7);
+		std::cout << "Result: " << add.get() << "\n";
+
+		//exception
+		std::future<int> excep = pool.submit([]() {
+			throw std::runtime_error("Blablabla");
+			return 21;
+		});
+		try {
+			std::cout << "Error: " << excep.get() << "\n";
+		}
+		catch (const std::exception& e) {
+			std::cout << "Caught from future: " << e.what() << "\n";
+		}
 	}
 
 	std::cout << "Ending thread pool\n";
