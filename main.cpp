@@ -1,5 +1,6 @@
 ﻿
 #include "./include/thread-pool/thread-pool.h"
+#include "./include/thread-pool/task.h"
 
 void print(int a, std::string yes) {
 	std::cout << yes << a <<"\n";
@@ -40,5 +41,7 @@ int main()
 	}
 
 	std::cout << "Ending thread pool\n";
+
+	task();
 	return 0;
 }
