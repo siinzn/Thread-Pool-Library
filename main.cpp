@@ -1,6 +1,5 @@
 ﻿
 #include "./include/thread-pool/thread-pool.h"
-#include "./include/thread-pool/task.h"
 
 void print(int a, std::string yes) {
 	std::cout << yes << a <<"\n";

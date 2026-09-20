@@ -26,12 +26,12 @@ void ThreadPool::payload() {
 
 		// if the tasks are not empty - take a task -> pop it -> release the mutex lock -> run that task
 		if (!queue.empty()) {
-			auto task = queue.front();
+			auto task = std::move(queue.front());
 			queue.pop();
 			lock.unlock();
 
 			// try/catch block catches any exception
-			try { task(); }
+			try { task->execute(); }
 			catch (const std::exception& e)
 			{
 				std::cerr << "Caught exception from worker thread: " << e.what() << "\n";
